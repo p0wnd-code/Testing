@@ -1,0 +1,11 @@
+---
+- name: Get hostname
+  hosts: 10.42.0.70
+  tasks:
+    - name: Fetch hostname
+      command: hostname
+      register: hostname_output
+    
+    - name: Display hostname
+      debug:
+        msg: "Hostname is {{ hostname_output.stdout }}"

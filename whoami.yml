@@ -1,0 +1,11 @@
+---
+- name: Voer whoami uit op de doelmachine
+  hosts: 10.42.0.70
+  tasks:
+    - name: Voer whoami uit
+      command: whoami
+      register: whoami_output
+
+    - name: Toon whoami resultaat
+      debug:
+        var: whoami_output.stdout

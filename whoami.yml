@@ -1,11 +1,11 @@
 ---
-- name: Voer whoami uit op de doelmachine
+- name: Get current user
   hosts: 10.42.0.70
   tasks:
-    - name: Voer whoami uit
+    - name: Run whoami command
       command: whoami
       register: whoami_output
 
-    - name: Toon whoami resultaat
+    - name: Display current user
       debug:
-        var: whoami_output.stdout
+        msg: "Current user is {{ whoami_output.stdout }}"

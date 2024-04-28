@@ -1,11 +1,11 @@
 ---
-- name: Get hostname
+- name: Haal hostname op
   hosts: 10.42.0.70
   tasks:
-    - name: Fetch hostname
-      command: hostname
+    - name: Haal hostname op
+      ansible.builtin.hostname:
       register: hostname_output
-    
-    - name: Display hostname
+
+    - name: Toon hostname
       debug:
-        msg: "Hostname is {{ hostname_output.stdout }}"
+        var: hostname_output.stdout

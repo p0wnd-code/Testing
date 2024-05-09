@@ -1,6 +1,6 @@
 ---
 - name: Get hostname
-  hosts: 10.42.0.70
+  hosts: 10.42.0.138
   tasks:
     - name: Fetch hostname
       command: hostname

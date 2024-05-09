@@ -1,6 +1,6 @@
 ---
 - name: Get current user
-  hosts: 10.42.0.70
+  hosts: 10.42.0.138
   tasks:
     - name: Run whoami command
       command: whoami

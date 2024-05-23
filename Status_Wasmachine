@@ -1,0 +1,30 @@
+intent_script:
+  WasmachineStatus:
+    action:
+      - choose:
+          - conditions:
+              - condition: numeric_state
+                entity_id: !input power_sensor
+                below: !input power_threshold
+            sequence:
+              - service: tts.google_translate_say
+                target:
+                  entity_id: !input google_nest
+                data:
+                  message: "De wasmachine is klaar."
+          - conditions:
+              - condition: numeric_state
+                entity_id: !input power_sensor
+                above: !input power_threshold
+            sequence:
+              - service: tts.google_translate_say
+                target:
+                  entity_id: !input google_nest
+                data:
+                  message: "De wasmachine is nog bezig."
+        default:
+          - service: tts.google_translate_say
+            target:
+              entity_id: !input google_nest
+            data:
+              message: "Ik kan de status van de wasmachine niet bepalen."

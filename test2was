@@ -1,0 +1,59 @@
+blueprint:
+  name: Controleer Wasmachine Status
+  description: Controleert of de wasmachine klaar is en onderneemt acties.
+  domain: automation
+  input:
+    power_sensor:
+      name: Stroomverbruik Sensor
+      description: De sensor die het stroomverbruik van de wasmachine meet.
+      selector:
+        entity:
+          domain: sensor
+          device_class: power
+    phone_numbers:
+      name: Mobiele telefoonnummers
+      description: Een lijst met mobiele telefoonnummers om een bericht naar te sturen.
+      selector:
+        object:
+          multiple: true
+    google_nest_devices:
+      name: Google Nest Apparaten
+      description: De Google Nest-apparaten waarop het bericht moet worden afgespeeld.
+      selector:
+        entity:
+          domain: media_player
+    message_title:
+      name: Bericht Titel
+      description: De titel van het bericht.
+      default: "Wasmachine Klaar"
+    message_content:
+      name: Bericht Inhoud
+      description: De inhoud van het bericht.
+      default: "Let op! De wasmachine is klaar dus deze kan uitgeruimd worden."
+
+trigger:
+  platform: numeric_state
+  entity_id: !input power_sensor
+  below: 5
+  for:
+    minutes: 1
+
+action:
+  - service: notify.mobile_app_send_message
+    data:
+      message: !input message_content
+      title: !input message_title
+      data:
+        push:
+          sound:
+            name: default
+          ttl: 0
+          priority: high
+        tag: "wasmachine_klaar"
+      target: !input phone_numbers
+  - service: tts.google_translate_say
+    data:
+      entity_id: !input google_nest_devices
+      message: !input message_content
+
+mode: single

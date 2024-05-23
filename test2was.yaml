@@ -13,13 +13,17 @@ blueprint:
     phone_numbers:
       name: Mobiele telefoonnummers
       description: Een lijst met mobiele telefoonnummers om een bericht naar te sturen.
-      selector:
+      selector: 
+          - "061245784"
+          - "0612t4546"
         object:
           multiple: true
     google_nest_devices:
       name: Google Nest Apparaten
       description: De Google Nest-apparaten waarop het bericht moet worden afgespeeld.
       selector:
+          - media_player.nest_beneden
+          - media_player.nest_boven
         entity:
           domain: media_player
     message_title:

@@ -1,0 +1,90 @@
+blueprint:
+  name: Washing Machine Notification and Status
+  description: Notify when the washing machine is done and respond to status inquiries.
+  domain: automation
+  input:
+    power_sensor:
+      name: Power Sensor
+      description: Sensor that monitors the power consumption of the washing machine.
+      selector:
+        entity:
+          domain: sensor
+    threshold:
+      name: Power Threshold
+      description: Power consumption threshold to determine if the washing machine is running or not.
+      default: 10
+      selector:
+        number:
+          min: 1
+          max: 100
+          unit_of_measurement: W
+    phone_notifications:
+      name: Phone Notifications
+      description: List of phones to notify.
+      selector:
+        target:
+          device:
+            integration: mobile_app
+    google_nest:
+      name: Google Nest Device
+      description: The Google Nest device to announce the message.
+      selector:
+        entity:
+          integration: google_assistant
+          domain: media_player
+    done_message:
+      name: Done Message
+      description: The message to announce and send when the washing machine is done.
+      default: "Let op! De wasmachine is klaar en kan uitgeruimd worden."
+      selector:
+        text:
+automation:
+  - alias: Washing Machine Done Notification
+    trigger:
+      - platform: state
+        entity_id: !input power_sensor
+        to: "off"
+        for: "00:05:00"
+    condition:
+      - condition: numeric_state
+        entity_id: !input power_sensor
+        below: !input threshold
+    action:
+      - service: notify.mobile_app
+        target: !input phone_notifications
+        data:
+          message: !input done_message
+      - service: media_player.volume_set
+        data:
+          entity_id: !input google_nest
+          volume_level: 0.8
+      - service: tts.google_translate_say
+        entity_id: !input google_nest
+        data:
+          message: !input done_message
+  - alias: Washing Machine Status Inquiry
+    trigger:
+      - platform: event
+        event_type: google_assistant_command
+        event_data:
+          command: "status van de wasmachine"
+    action:
+      - choose:
+          - conditions:
+              - condition: numeric_state
+                entity_id: !input power_sensor
+                above: !input threshold
+            sequence:
+              - service: tts.google_translate_say
+                entity_id: !input google_nest
+                data:
+                  message: "De wasmachine is momenteel aan het draaien."
+          - conditions:
+              - condition: numeric_state
+                entity_id: !input power_sensor
+                below: !input threshold
+            sequence:
+              - service: tts.google_translate_say
+                entity_id: !input google_nest
+                data:
+                  message: "De wasmachine is klaar."

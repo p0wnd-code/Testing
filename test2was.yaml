@@ -13,9 +13,7 @@ blueprint:
     phone_numbers:
       name: Mobiele telefoonnummers
       description: Een lijst met mobiele telefoonnummers om een bericht naar te sturen.
-      selector: 
-          - 061245784
-          - 0612t4546
+      selector: "061245784","0612t4546"
         object:
           multiple: true
     google_nest_devices:

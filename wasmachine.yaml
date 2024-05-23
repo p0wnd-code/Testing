@@ -1,5 +1,5 @@
 blueprint:
-  name: Washing Machine Notification and Status
+  name: Wasmachine status en notificaties
   description: Notify when the washing machine is done and respond to status inquiries.
   domain: automation
   input:
